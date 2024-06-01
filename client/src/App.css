@@ -82,7 +82,8 @@ h2 {
 
   justify-content: space-between;
 }
-.cancel-button {
+.cancel-button,
+.add-note-button {
   background-color: orange;
   color: white;
   padding: 20px;

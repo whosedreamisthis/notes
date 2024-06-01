@@ -59,6 +59,7 @@ const App = () => {
     setNotes(updatedNotes);
     setTitle('');
     setContent('');
+    setCurrentNote(null);
   };
 
   const handleNoteClick = (note: Note): void => {
@@ -86,16 +87,22 @@ const App = () => {
             setContent((e.target as HTMLInputElement).value);
           }}
         ></textarea>
-        <div className="buttons-container">
-          <button type="submit">Save</button>
-          <button
-            onClick={handleCancel}
-            className="cancel-button"
-            type="button"
-          >
-            Cancel
+        {currentNote ? (
+          <div className="buttons-container">
+            <button type="submit">Save</button>
+            <button
+              onClick={handleCancel}
+              className="cancel-button"
+              type="button"
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button type="submit" className="add-note-button">
+            Add Note
           </button>
-        </div>
+        )}
       </form>
 
       <div className="notes-grid">
