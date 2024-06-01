@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import NoteItem from './note-item';
 import './App.css';
 import './note-item';
+const { v4 } = require('uuid');
 type Note = {
   id: number;
   title: string;
@@ -30,12 +31,22 @@ const App = () => {
       content: '4 content and so on and so forth',
     },
   ]);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const handleSubmit = (event: React.FormEvent) => {};
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const note: Note = {
+      title,
+      content,
+      id: v4(),
+    };
+    setNotes([note, ...notes]);
+    setTitle('');
+    setContent('');
+  };
   return (
     <div className="app-container">
-      <form className="note-form">
+      <form className="note-form" onSubmit={handleSubmit}>
         <input
           value={title}
           placeholder="title"
