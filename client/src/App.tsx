@@ -4,37 +4,31 @@ import './App.css';
 import './note-item';
 const { v4 } = require('uuid');
 type Note = {
-  id: number;
+  id: string;
   title: string;
   content: string;
 };
+
+const initialNote = {
+  id: '',
+  title: '',
+  content: '',
+};
 const App = () => {
-  const [notes, setNotes] = useState<Note[]>([
-    {
-      id: 1,
-      title: 'First Title',
-      content: 'First content and so on and so forth',
-    },
-    {
-      id: 2,
-      title: '2 Title',
-      content: '2 content and so on and so forth',
-    },
-    {
-      id: 3,
-      title: '3 Title',
-      content: '3 content and so on and so forth',
-    },
-    {
-      id: 4,
-      title: '4 Title',
-      content: '4 content and so on and so forth',
-    },
-  ]);
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [currentNote, setCurrentNote] = useState<Note | null>(null);
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const handleSubmit = (event: React.FormEvent) => {
+
+  const handleAddNote = (event: React.FormEvent): void => {
     event.preventDefault();
+    if (currentNote) {
+      handleUpdateNote(event);
+      return;
+    }
+    if (title.trim() === '' || content.trim() === '') {
+      return;
+    }
     const note: Note = {
       title,
       content,
@@ -44,9 +38,37 @@ const App = () => {
     setTitle('');
     setContent('');
   };
+  const handleCancel = (e: React.FormEvent): void => {
+    setTitle('');
+    setContent('');
+    setCurrentNote(null);
+  };
+  const handleUpdateNote = (event: React.FormEvent): void => {
+    event.preventDefault();
+    if (!currentNote) {
+      return;
+    }
+    const updatedNote: Note = {
+      id: currentNote.id,
+      title,
+      content,
+    };
+    const updatedNotes = notes.map((note: Note): any =>
+      note.id === currentNote.id ? updatedNote : note
+    );
+    setNotes(updatedNotes);
+    setTitle('');
+    setContent('');
+  };
+
+  const handleNoteClick = (note: Note): void => {
+    setCurrentNote(note);
+    setTitle(note.title);
+    setContent(note.content);
+  };
   return (
     <div className="app-container">
-      <form className="note-form" onSubmit={handleSubmit}>
+      <form className="note-form" onSubmit={handleAddNote}>
         <input
           value={title}
           placeholder="title"
@@ -64,12 +86,28 @@ const App = () => {
             setContent((e.target as HTMLInputElement).value);
           }}
         ></textarea>
-        <button type="submit">Add Note </button>
+        <div className="buttons-container">
+          <button type="submit">Save</button>
+          <button
+            onClick={handleCancel}
+            className="cancel-button"
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
       </form>
 
       <div className="notes-grid">
         {notes.map((note) => (
-          <NoteItem key={note.id} title={note.title} content={note.content} />
+          <div
+            className="note-item"
+            onClick={(e) => {
+              handleNoteClick(note);
+            }}
+          >
+            <NoteItem key={note.id} title={note.title} content={note.content} />
+          </div>
         ))}
       </div>
     </div>

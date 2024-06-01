@@ -9,13 +9,11 @@ export default function NoteItem({
 }) {
   return (
     <>
-      <div className="note-item">
-        <div className="notes-header">
-          <button>x</button>
-        </div>
-        <h2>{title}</h2>
-        <p>{content}</p>
+      <div className="notes-header">
+        <button>x</button>
       </div>
+      <h2>{title}</h2>
+      <p>{content}</p>
     </>
   );
 }
