@@ -67,6 +67,11 @@ const App = () => {
     setTitle(note.title);
     setContent(note.content);
   };
+
+  const handleNoteDelete = (event: React.FormEvent, noteId: string) => {
+    event.stopPropagation();
+    setNotes(notes.filter((note) => note.id !== noteId));
+  };
   return (
     <div className="app-container">
       <form className="note-form" onSubmit={handleAddNote}>
@@ -108,12 +113,18 @@ const App = () => {
       <div className="notes-grid">
         {notes.map((note) => (
           <div
+            key={note.id}
             className="note-item"
             onClick={(e) => {
               handleNoteClick(note);
             }}
           >
-            <NoteItem key={note.id} title={note.title} content={note.content} />
+            <NoteItem
+              id={note.id}
+              title={note.title}
+              content={note.content}
+              handleDelete={handleNoteDelete}
+            />
           </div>
         ))}
       </div>

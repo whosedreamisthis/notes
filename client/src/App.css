@@ -80,7 +80,11 @@ h2 {
 .buttons-container {
   display: flex;
 
-  justify-content: space-between;
+  justify-content: space-evenly;
+  gap: 5px;
+}
+.buttons-container button {
+  flex: 1;
 }
 .cancel-button,
 .add-note-button {
