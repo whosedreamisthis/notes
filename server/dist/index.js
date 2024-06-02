@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 var express = require('express');
+//import { Request } from 'express';
 var Express = require('express').Express;
 var cors = require('cors');
 var sqlite3 = require('sqlite3');
@@ -91,14 +92,15 @@ app.get('/notes', function (req, res) { return __awaiter(_this, void 0, void 0, 
     });
 }); });
 app.get('/newnote', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-    var note;
+    var _body;
     return __generator(this, function (_a) {
-        note = JSON.parse(req.headers.body);
+        console.log('req', req);
+        _body = req.headers['body'];
         knex('notes')
             .insert({
-            id: note.id,
-            title: note.title,
-            content: note.content,
+            id: _body.id,
+            title: _body.title,
+            content: _body.content,
         })
             .then(function (rows) {
             res.send({ notes: rows });

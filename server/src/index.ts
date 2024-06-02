@@ -1,8 +1,11 @@
 const express = require('express');
-
+import { Request, Response } from 'express';
+const { Express } = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3');
 const { promisify } = require('util');
+//const { Request, Response, NextFunction };
+const request = require('express').Request;
 const port = 5000;
 const host = 'http://127.0.0.1:' + port;
 const app = express();
@@ -43,22 +46,26 @@ knex.schema.hasTable('notes').then((exists: boolean) => {
       .then(() => {
         console.log("Table 'notes' created");
       })
-      .catch((error: any) =>
+      .catch((error: Error) =>
         console.error(`There was an error creating table: ${error}`)
       );
   }
 });
 //    // "start": "npx nodemon"
 
-app.get('/notes', async (req: any, res: any) => {
+app.get('/notes', async (req: Request, res: Response) => {
   knex('notes')
     .then((rows: any) => {
       res.send({ notes: rows });
     })
-    .catch((error: any) => console.log(error));
+    .catch((error: Error) => console.log(error));
 });
-app.get('/newnote', async (req: any, res: any) => {
-  const note = JSON.parse(req.headers.body);
+app.get('/newnote', async (req: Request, res: Response) => {
+  const n = req.headers.body;
+
+  const stringed = `${n}`;
+  const note = JSON.parse(stringed);
+
   knex('notes')
     .insert({
       id: note.id,
@@ -70,18 +77,16 @@ app.get('/newnote', async (req: any, res: any) => {
     });
 });
 
-app.get('/deletenote', async (req: any, res: any) => {
-  const note = JSON.parse(req.headers.body);
+app.get('/deletenote', async (req: Request, res: Response) => {
+  const n = req.headers.body;
+
+  const stringed = `${n}`;
+  const note = JSON.parse(stringed);
   await knex('notes')
     .where({
       id: note.id,
     })
     .del();
-  // knex('notes')
-  //   .where('id', note.id)
-  //   .then((res: any) => {
-  //     console.log(res);
-  //   });
 });
 
 app.listen(port, () => {
