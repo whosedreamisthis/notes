@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NoteItem from './note-item';
 import './App.css';
 import './note-item';
+const BASE_URL = 'https://notes-app-ae7v.onrender.com';
 const { v4 } = require('uuid');
 type Note = {
   id: string;
@@ -20,7 +21,7 @@ const App = () => {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/notes', {
+    fetch(`${BASE_URL}/notes`, {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -53,7 +54,7 @@ const App = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(note),
     };
-    fetch('http://127.0.0.1:5000/newnote', {
+    fetch(`${BASE_URL}/newnote`, {
       headers: {
         method: 'POST',
         'Content-Type': 'application/json',
@@ -96,7 +97,7 @@ const App = () => {
     event.stopPropagation();
     setNotes(notes.filter((note) => note.id !== noteId));
 
-    fetch('http://127.0.0.1:5000/deletenote', {
+    fetch(`${BASE_URL}/deletenote`, {
       headers: {
         method: 'POST',
         'Content-Type': 'application/json',
