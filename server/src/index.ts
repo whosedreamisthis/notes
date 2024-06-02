@@ -53,14 +53,14 @@ knex.schema.hasTable('notes').then((exists: boolean) => {
 });
 //    // "start": "npx nodemon"
 
-app.get('/notes', async (req: Request, res: Response) => {
+app.get('/notes', async (req: any, res: any) => {
   knex('notes')
     .then((rows: any) => {
       res.send({ notes: rows });
     })
     .catch((error: Error) => console.log(error));
 });
-app.get('/newnote', async (req: Request, res: Response) => {
+app.get('/newnote', async (req: any, res: any) => {
   const n = req.headers.body;
 
   const stringed = `${n}`;
@@ -77,7 +77,7 @@ app.get('/newnote', async (req: Request, res: Response) => {
     });
 });
 
-app.get('/deletenote', async (req: Request, res: Response) => {
+app.get('/deletenote', async (req: any, res: any) => {
   const n = req.headers.body;
 
   const stringed = `${n}`;
