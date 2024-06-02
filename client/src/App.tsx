@@ -20,7 +20,9 @@ const App = () => {
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
+    setIsLoading(true);
     fetch(`${BASE_URL}/notes`, {
       headers: {
         'Content-Type': 'application/json',
@@ -28,7 +30,10 @@ const App = () => {
       },
     })
       .then((res) => res.json())
-      .then((data) => setNotes(data.notes));
+      .then((data) => {
+        setNotes(data.notes);
+        setIsLoading(false);
+      });
     //       console.log(res);
     //     });
   }, []);
@@ -108,7 +113,9 @@ const App = () => {
       },
     });
   };
-  return (
+  return isLoading ? (
+    <div className="loading">Loading...</div>
+  ) : (
     <div className="app-container">
       <form className="note-form" onSubmit={handleAddNote}>
         <input
