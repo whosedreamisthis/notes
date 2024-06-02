@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NoteItem from './note-item';
 import './App.css';
 import './note-item';
@@ -19,7 +19,18 @@ const App = () => {
   const [currentNote, setCurrentNote] = useState<Note | null>(null);
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/notes', {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setNotes(data.notes));
+    //       console.log(res);
+    //     });
+  }, []);
   const handleAddNote = (event: React.FormEvent): void => {
     event.preventDefault();
     if (currentNote) {
@@ -34,9 +45,22 @@ const App = () => {
       content,
       id: v4(),
     };
-    setNotes([note, ...notes]);
+    setNotes([...notes, note]);
     setTitle('');
     setContent('');
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(note),
+    };
+    fetch('http://127.0.0.1:5000/newnote', {
+      headers: {
+        method: 'POST',
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        body: JSON.stringify(note),
+      },
+    }).then((res) => res.json());
   };
   const handleCancel = (e: React.FormEvent): void => {
     setTitle('');
@@ -71,6 +95,17 @@ const App = () => {
   const handleNoteDelete = (event: React.FormEvent, noteId: string) => {
     event.stopPropagation();
     setNotes(notes.filter((note) => note.id !== noteId));
+
+    fetch('http://127.0.0.1:5000/deletenote', {
+      headers: {
+        method: 'POST',
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        body: JSON.stringify({
+          id: noteId,
+        }),
+      },
+    });
   };
   return (
     <div className="app-container">
