@@ -48,6 +48,7 @@ knex.schema.hasTable('notes').then((exists: boolean) => {
       );
   }
 });
+//    // "start": "npx nodemon"
 
 app.get('/notes', async (req: any, res: any) => {
   knex('notes')
@@ -63,13 +64,24 @@ app.get('/newnote', async (req: any, res: any) => {
       id: note.id,
       title: note.title,
       content: note.content,
-      // id: req.headers.body.id,
-      // title: req.headers.title,
-      // content: req.headers.content,
     })
     .then((rows: any) => {
       res.send({ notes: rows });
     });
+});
+
+app.get('/deletenote', async (req: any, res: any) => {
+  const note = JSON.parse(req.headers.body);
+  await knex('notes')
+    .where({
+      id: note.id,
+    })
+    .del();
+  // knex('notes')
+  //   .where('id', note.id)
+  //   .then((res: any) => {
+  //     console.log(res);
+  //   });
 });
 
 app.listen(port, () => {

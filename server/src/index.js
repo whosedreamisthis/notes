@@ -60,8 +60,8 @@ var knex = require('knex')({
     },
     useNullAsDefault: true,
 });
-knex.schema.hasTable('Notes').then(function (exists) {
-    if (exists) {
+knex.schema.hasTable('notes').then(function (exists) {
+    if (!exists) {
         return knex.schema
             .createTable('notes', function (table) {
             table.string('id').primary();
@@ -76,21 +76,29 @@ knex.schema.hasTable('Notes').then(function (exists) {
         });
     }
 });
+//    // "start": "npx nodemon"
 app.get('/notes', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        knex('notes').then(function (rows) {
+        knex('notes')
+            .then(function (rows) {
             res.send({ notes: rows });
-        });
+        })
+            .catch(function (error) { return console.log(error); });
         return [2 /*return*/];
     });
 }); });
 app.get('/newnote', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+    var note;
     return __generator(this, function (_a) {
+        note = JSON.parse(req.headers.body);
         knex('notes')
             .insert({
-            id: req.headers.body.id,
-            title: req.headers.title,
-            content: req.headers.content,
+            id: note.id,
+            title: note.title,
+            content: note.content,
+            // id: req.headers.body.id,
+            // title: req.headers.title,
+            // content: req.headers.content,
         })
             .then(function (rows) {
             res.send({ notes: rows });
